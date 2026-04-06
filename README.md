@@ -17,3 +17,13 @@ python log_analyser.py
 ```
 
 ## Sample Output
+
+--- Top IPs by Request Count ---
+192.168.1.1 — 4 requests
+192.168.1.2 — 4 requests
+--- Suspicious IPs (3+ 404 errors) ---
+⚠️  192.168.1.2 — 4 404 errors — INVESTIGATE
+⚠️  192.168.1.1 — 3 404 errors — INVESTIGATE
+
+## Author
+LeightonSec — IT & Cybersecurity | CompTIA Security+ | Splunk
