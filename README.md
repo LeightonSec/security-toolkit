@@ -31,7 +31,6 @@ This is not a finished product. It is a working portfolio — growing as my skil
 
 - Python 3.11+
 - Kali Linux
-- Wireshark
 - Splunk
 - Hack The Box
 
