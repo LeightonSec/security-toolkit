@@ -124,7 +124,7 @@ Built to reinforce log analysis skills from Splunk SIEM training and translate t
 
 ## Author
 
-**Leighton Wilson** — SOC Analyst | LeightonSec
+**Leighton Wilson** — Security Researcher | LeightonSec
 CompTIA Security+ | Splunk | [LeightonSec GitHub](https://github.com/LeightonSec)
 
 ---
