@@ -1,4 +1,4 @@
-# Security Toolkit — Log Analyser
+# Security Toolkit — Log Analyser `v1.0.0`
 
 A modular web server log analysis tool that parses access logs and detects threats — built to mirror real SOC analyst workflows.
 
@@ -91,6 +91,28 @@ security-toolkit/
 - All regex patterns use non-greedy quantifiers — no ReDoS exposure
 - Log content treated as untrusted input throughout — no eval, no shell execution
 - Reports saved locally only — nothing sent externally
+
+---
+
+## Authorised Use Only
+
+This tool is intended for use on systems and log files you own or have explicit written permission to analyse. Do not run against logs or infrastructure belonging to others without authorisation. Responsible, ethical use only.
+
+---
+
+## Limitations
+
+- Parses Combined Log Format and Common Log Format only — non-standard log formats will produce errors or incorrect output
+- Detection rules use heuristics and signature matching — expect false positives on busy or unusual traffic
+- No real-time or streaming log analysis — file-based batch processing only
+- No IP geolocation or threat intelligence enrichment — out of scope for this version
+- Threshold defaults (404s, request volume) may need tuning per environment
+
+---
+
+## Out of Scope
+
+This tool does not: ingest live network traffic, query external APIs or threat feeds, integrate with a SIEM, or provide automated response actions. It is a detection and reporting aid, not a full security platform.
 
 ---
 
