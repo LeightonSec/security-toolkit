@@ -170,11 +170,14 @@ fi
 # =============================================================================
 header "3/8 · Code quality & security"
 
-# Bandit — Python SAST
+# Bandit — scan only git-tracked Python files to avoid venv/third-party noise
 if cmd_exists bandit; then
-  BANDIT_OUT=$(bandit -r . -ll -q \
-    --exclude .git,node_modules,__pycache__,tests \
-    -x "$REPO/venv,$REPO/.venv" 2>/dev/null || true)
+  BANDIT_PY=$(git ls-files '*.py' 2>/dev/null || true)
+  if [ -n "$BANDIT_PY" ]; then
+    BANDIT_OUT=$(echo "$BANDIT_PY" | xargs bandit -ll -q 2>/dev/null || true)
+  else
+    BANDIT_OUT=""
+  fi
   if [ -z "$BANDIT_OUT" ]; then
     pass "bandit — no medium/high severity issues"
   else
@@ -216,7 +219,7 @@ fi
 
 # CVE check
 if cmd_exists pip-audit && [ -f "requirements.txt" ]; then
-  if pip-audit -r requirements.txt -q 2>/dev/null; then
+  if pip-audit -r requirements.txt 2>/dev/null; then
     pass "pip-audit — no known CVEs in requirements.txt"
   else
     fail "pip-audit — vulnerable dependencies found (run: pip-audit -r requirements.txt)"
@@ -250,9 +253,20 @@ if [ -z "$TEST_FILES" ]; then
 else
   pass "Test files present: $(echo "$TEST_FILES" | wc -l | tr -d ' ') file(s)"
 
-  if cmd_exists pytest; then
+  # Prefer repo venv pytest so the right dependencies are available
+  if [ -f "$REPO/venv/bin/pytest" ]; then
+    PYTEST_CMD="$REPO/venv/bin/pytest"
+  elif [ -f "$REPO/.venv/bin/pytest" ]; then
+    PYTEST_CMD="$REPO/.venv/bin/pytest"
+  elif cmd_exists pytest; then
+    PYTEST_CMD="pytest"
+  else
+    PYTEST_CMD=""
+  fi
+
+  if [ -n "$PYTEST_CMD" ]; then
     echo -e "  ${DIM}Running pytest...${NC}"
-    if pytest --tb=short -q 2>/dev/null; then
+    if "$PYTEST_CMD" --tb=short -q 2>/dev/null; then
       pass "pytest — all tests pass"
     else
       fail "pytest — tests failing (run: pytest --tb=short for details)"
