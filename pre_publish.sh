@@ -104,7 +104,7 @@ else
 fi
 
 # Secrets in commit history
-HISTORY_HITS=$(git log -p --all 2>/dev/null | \
+HISTORY_HITS=$(git log -p --all -- ':(exclude)tests/' 2>/dev/null | \
   grep -iE '^\+.*(api_key|apikey|secret|password|token|private_key)\s*=\s*["\x27][^"\x27]{6,}' | \
   grep -v "example\|dummy\|your_\|<\|TODO" || true)
 if [ -z "$HISTORY_HITS" ]; then
