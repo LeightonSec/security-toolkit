@@ -8,8 +8,9 @@ A modular web server log analysis tool that parses access logs and detects threa
 
 | Area | Detail |
 |---|---|
-| **Python** | Modular design, dataclasses, regex, argparse, file I/O |
+| **Python** | Modular design, dataclasses, regex, argparse, file I/O, pytest |
 | **Security Engineering** | Input validation, path traversal prevention, non-ReDoS regex patterns |
+| **Detection Engineering** | Evasion-resistant signatures, false-positive tuning, adversarial test coverage |
 | **Threat Detection** | 404 scanning, brute force, directory traversal, SQLi, suspicious user agents |
 | **SOC Workflows** | Log parsing, indicator flagging, structured report generation |
 | **Secure Coding** | No hardcoded paths, untrusted input handling, no shell execution |
@@ -31,6 +32,8 @@ Automates the manual process of sifting through web server access logs to surfac
 | **Suspicious User Agents** | Known attack tools: sqlmap, nikto, nmap, gobuster, hydra and more |
 | **Directory Traversal** | `../` patterns and URL-encoded variants in request paths |
 | **SQL Injection** | UNION SELECT, DROP TABLE, OR 1=1 and other SQLi signatures in paths |
+
+SQL injection detection is hardened against common evasion: string-based boolean tautologies (`'a'='a`) and comment-terminator injection (`admin'--`), with guards to avoid false positives on benign text such as "insert into your cart". Every detection rule is covered by an adversarial test suite (31 tests) that includes locked regression cases for each fixed evasion, so these gaps cannot silently reopen.
 
 ---
 
@@ -60,6 +63,7 @@ security-toolkit/
 ├── log_parser.py    # Log parsing — Combined and Common Log Format
 ├── detectors.py     # Detection rules — all threat logic lives here
 ├── reporter.py      # Report builder — Markdown output and file saving
+├── test_detectors.py # Adversarial test suite for the detection pipeline
 ├── reports/         # Generated reports (gitignored)
 └── LICENSE
 ```
