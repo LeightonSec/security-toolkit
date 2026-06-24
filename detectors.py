@@ -18,8 +18,16 @@ TRAVERSAL_RE = re.compile(r'\.\.[/\\]|%2e%2e[%2f%5c]', re.IGNORECASE)
 
 # SQL injection patterns in URL paths — non-greedy to avoid ReDoS
 SQLI_RE = re.compile(
-    r'(union\s+select|select\s+.+?\s+from|insert\s+into|drop\s+table'
-    r'|or\s+1\s*=\s*1|\'or\'|--\s|/\*.+?\*/|xp_cmdshell|exec\s*\()',
+    r'(union\s+select|select\s+.+?\s+from'
+    # INSERT INTO requires real SQL context (table then (, VALUES or SELECT),
+    # so plain English like "insert into your cart" does not fire.
+    r'|insert\s+into\s+\w+\s*(?:\(|values|select)'
+    r'|drop\s+table|or\s+1\s*=\s*1'
+    # quoted boolean tautologies: 'or' , ' OR ' , ' AND ' between quotes
+    r"|'\s*(?:or|and)\s*'"
+    # comment terminators: '--  ;--  or -- followed by whitespace
+    r"|'--|;\s*--|--\s"
+    r'|/\*.+?\*/|xp_cmdshell|exec\s*\()',
     re.IGNORECASE
 )
 
