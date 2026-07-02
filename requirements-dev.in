@@ -1,0 +1,6 @@
+# Dev/CI tooling only — the toolkit itself is stdlib-only (no runtime deps).
+# Compile with the CI matrix FLOOR so marker-gated transitives survive:
+#   uv pip compile --universal --python-version 3.10 --generate-hashes requirements-dev.in -o requirements-dev.txt
+pytest
+ruff
+bandit
